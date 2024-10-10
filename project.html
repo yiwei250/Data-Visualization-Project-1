@@ -6,6 +6,10 @@
     <title>Spotify Streaming Success Visualization</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
+        h3 {
+            font-size: 15px; /* Fixed font size directly in CSS */
+            color: grey;
+        }
         .chart {
             margin: 50px auto;
             width: 600px;
@@ -22,6 +26,9 @@
     </style>
 </head>
 <body>
+    <h3>
+        &nbsp; &nbsp; &nbsp;   Yining Wang (yw2622) &nbsp; &nbsp; &nbsp; Chenyu Yu (cy523) &nbsp; &nbsp; &nbsp; Yiwei Luo (yl3928)
+    </h3>
 
     <h1 class="title">Relationship between Musical Features and Spotify Streams</h1>
 
@@ -38,7 +45,7 @@
         d3.csv("Spotify Most Streamed Songs.csv").then(function(data) {
             // Convert relevant fields from strings to numbers
             data.forEach(function(d) {
-                d.streams = +d["streams(10 million)"] * 10;  // Convert to actual number of streams
+                d.streams = +d["streams(10 million)"] * 10;  // Convert to unit of million to avoid cluttering
                 d.danceability = +d["danceability_%"];
                 d.valence = +d["valence_%"];
                 d.energy = +d["energy_%"];
@@ -102,16 +109,81 @@
                .style("text-anchor", "middle")
                .text(yLabel);
 
-            // Scatter plot
-            svg.selectAll(".dot")
+            // jitter function
+            //add a random number from 0 to 25px
+            //the overscale issue is considered to limit the jitter size
+            //a jitter variable is here to determine to jitter size depends on situation
+            // a minimum jitter variable is designed for scales with higher values of lowest numbers
+            let max =0;
+            let min = 0;
+            function jitter() {
+                return (Math.random() * (max-min) +min);
+            }
+
+            // use cluster locaiton of spots to determine jitter locaiton
+            let Color = "red";
+            let opa = 0.2;
+            let jittery = false;
+
+            if(chartId=="#danceability-chart") {
+                    Color = "orange";
+                    jittery = true;
+                    max=20;
+                    min = -20;
+             }else if(chartId== "#valence-chart"){
+                    Color = "red";
+              }else if(chartId== "#energy-chart"){
+                    Color = "gold";
+                    opa = 0.5;
+                    jittery = true;
+                    max=10;
+                    min = -10;
+                    
+                 }
+                else if(chartId==  "#acousticness-chart"){
+                    Color = "goldenrod";
+                    opa = 0.5;
+                    jittery = true;
+                    max=10;
+                    
+                } else if(chartId=="#instrumentalness-chart"){
+                    Color = "darkturquoise";
+                    opa = 0.5;
+                    jittery = true;
+                    max=30;
+
+                         }
+                else if(chartId== "#liveness-chart"){
+                     Color = "limegreen";
+                    jittery = true;
+                    max=10;
+                    min = -8;
+
+                    
+                }else if(chartId== "#speechiness-chart"){
+                    Color = "blue";
+                    jittery = true;
+                    max=5;
+                    min = -7.5;
+
+            }
+
+            // scatterplot
+            let plot = svg.selectAll(".dot")
                .data(data)
                .enter().append("circle")
                .attr("class", "dot")
-               .attr("cx", d => xScale(d.streams))
-               .attr("cy", d => yScale(d[attribute]))
                .attr("r", 4)
-               .style("fill", "steelblue")
-               .style("opacity", 0.7);
+               .style("fill", Color)
+               .style("opacity", opa);
+            //jitter application
+            if(jittery) {
+                plot.attr("cx", d => xScale(d.streams))
+                    .attr("cy", d => yScale(d[attribute]) - jitter());
+            } else {
+                plot.attr("cx", d => xScale(d.streams))
+                    .attr("cy", d => yScale(d[attribute]));
+            }
         }
     </script>
 </body>
