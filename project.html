@@ -23,14 +23,60 @@
             margin: 20px;
             font-size: 24px;
         }
+           .legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
     <h3>
         &nbsp; &nbsp; &nbsp;   Yining Wang (yw2622) &nbsp; &nbsp; &nbsp; Chenyu Yu (cy523) &nbsp; &nbsp; &nbsp; Yiwei Luo (yl3928)
     </h3>
-
+<!-- Legends items for color samples -->
     <h1 class="title">Relationship between Musical Features and Spotify Streams</h1>
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-dot" style="background-color: orange;"></div>
+            <span style = "color: orange">Danceability</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background-color: red;"></div>
+            <span style = "color: red">Valence</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background-color: gold;"></div>
+            <span style = "color: gold">Energy</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background-color: goldenrod;"></div>
+            <span style = "color: goldenrod">Acousticness</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background-color: darkturquoise;"></div>
+            <span style = "color: darkturquoise">Instrumentalness</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background-color: limegreen;"></div>
+            <span style = "color: limegreen" >Liveness</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background-color: blue;"></div>
+            <span style = "color: blue">Speechiness</span>
+        </div>
+    </div>
 
     <div id="danceability-chart" class="chart"></div>
     <div id="valence-chart" class="chart"></div>
@@ -110,9 +156,9 @@
                .text(yLabel);
 
             // jitter function
-            //add a random number from 0 to 25px
+            //add a random number from negative min to positive max
             //the overscale issue is considered to limit the jitter size
-            //a jitter variable is here to determine to jitter size depends on situation
+            ////a jitter variable is here to determine to jitter size depends on situation
             // a minimum jitter variable is designed for scales with higher values of lowest numbers
             let max =0;
             let min = 0;
@@ -128,8 +174,8 @@
             if(chartId=="#danceability-chart") {
                     Color = "orange";
                     jittery = true;
-                    max=20;
-                    min = -20;
+                    max=10;
+                    min = -10;
              }else if(chartId== "#valence-chart"){
                     Color = "red";
               }else if(chartId== "#energy-chart"){
